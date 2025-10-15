@@ -10,9 +10,10 @@ const sequelize = new Sequelize({
 
 const Company = require('./company')(sequelize);
 const Employee = require('./employee')(sequelize);
+const User = require('./user')(sequelize);
 
 
 Company.hasMany(Employee, { foreignKey: 'companyId', onDelete: 'CASCADE' });
 Employee.belongsTo(Company, { foreignKey: 'companyId' });
 
-module.exports = { sequelize, Company, Employee };
+module.exports = { sequelize, Company, Employee, User };

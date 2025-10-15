@@ -1,9 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { Employee, Company } = require('../models');
+const { Employee, Company } = require("../models");
+const auth = require("../middleware/auth");
 
+//Public routes
 // GET /api/employees?page=1&limit=10
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = Math.min(parseInt(req.query.limit) || 10, 100);
   const offset = (page - 1) * limit;
@@ -11,26 +13,27 @@ router.get('/', async (req, res) => {
   const { count, rows } = await Employee.findAndCountAll({
     limit,
     offset,
-    order: [['id', 'ASC']],
-    include: [{ model: Company, attributes: ['id', 'name'] }]
+    order: [["id", "ASC"]],
+    include: [{ model: Company, attributes: ["id", "name"] }],
   });
 
   res.json({ total: count, page, perPage: limit, data: rows });
 });
 
 // GET /api/employees/:id
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   const emp = await Employee.findByPk(req.params.id, { include: Company });
-  if (!emp) return res.status(404).json({ message: 'Employee not found' });
+  if (!emp) return res.status(404).json({ message: "Employee not found" });
   res.json(emp);
 });
 
+//Protected routes
 // POST /api/employees
-router.post('/', async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const { companyId } = req.body;
     const company = await Company.findByPk(companyId);
-    if (!company) return res.status(400).json({ message: 'Invalid companyId' });
+    if (!company) return res.status(400).json({ message: "Invalid companyId" });
 
     const employee = await Employee.create(req.body);
     res.status(201).json(employee);
@@ -40,19 +43,19 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/employees/:id
-router.put('/:id', async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const emp = await Employee.findByPk(req.params.id);
-  if (!emp) return res.status(404).json({ message: 'Employee not found' });
+  if (!emp) return res.status(404).json({ message: "Employee not found" });
   await emp.update(req.body);
   res.json(emp);
 });
 
 // DELETE /api/employees/:id
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const emp = await Employee.findByPk(req.params.id);
-  if (!emp) return res.status(404).json({ message: 'Employee not found' });
+  if (!emp) return res.status(404).json({ message: "Employee not found" });
   await emp.destroy();
-  res.json({ message: 'Deleted' });
+  res.json({ message: "Deleted" });
 });
 
 module.exports = router;
