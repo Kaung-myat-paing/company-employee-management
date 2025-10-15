@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import API from "../api";
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 5;
 
-  const loadEmployees = () => {
-    API.get("/employees?page=1&limit=10").then((res) =>
-      setEmployees(res.data.data)
-    );
-  };
+  const loadEmployees = useCallback(async () => {
+    API.get(`/employees?page=${page}&limit=${limit}`).then((res) => {
+      setEmployees(res.data.data);
+      setTotal(res.data.total);
+    });
+  }, [page, limit]);
 
   useEffect(() => {
     loadEmployees();
-  }, []);
+  }, [loadEmployees]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this employee?")) {
@@ -60,6 +64,25 @@ export default function EmployeesPage() {
           ))}
         </tbody>
       </table>
+      <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+        <button
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {page} of {Math.ceil(total / limit) || 1}
+        </span>
+        <button
+          onClick={() =>
+            setPage((p) => (p < Math.ceil(total / limit) ? p + 1 : p))
+          }
+          disabled={page >= Math.ceil(total / limit)}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,18 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import API from "../api";
 import { Link } from "react-router-dom";
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 5;
 
-  const loadCompanies = () => {
-    API.get("/companies?page=1&limit=10").then((res) =>
-      setCompanies(res.data.data)
-    );
-  };
+  const loadCompanies = useCallback(async () => {
+    try {
+      const res = await API.get(`/companies?page=${page}&limit=${limit}`);
+      setCompanies(res.data.data);
+      setTotal(res.data.total);
+    } catch (err) {
+      console.error("Failed to load companies:", err);
+    }
+  }, [page, limit]);
 
   useEffect(() => {
     loadCompanies();
-  }, []);
+  }, [loadCompanies]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this company?")) {
@@ -56,6 +63,25 @@ export default function CompaniesPage() {
           ))}
         </tbody>
       </table>
+      <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+        <button
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {page} of {Math.ceil(total / limit) || 1}
+        </span>
+        <button
+          onClick={() =>
+            setPage((p) => (p < Math.ceil(total / limit) ? p + 1 : p))
+          }
+          disabled={page >= Math.ceil(total / limit)}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
