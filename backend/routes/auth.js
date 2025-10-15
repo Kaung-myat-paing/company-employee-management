@@ -1,10 +1,15 @@
 const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
+const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: false, // true if using HTTPS in production
+  sameSite: "lax",
+};
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
@@ -33,9 +38,29 @@ router.post('/login', async (req, res) => {
   const token = jwt.sign(
     { id: user.id, username: user.username },
     JWT_SECRET,
-    { expiresIn: '8h' }
+    { expiresIn: '1h' }
   );
-  res.json({ token });
+  res.cookie("token", token, COOKIE_OPTIONS);
+  res.json({ message: "Login successful" });
+});
+
+// POST /api/auth/logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", COOKIE_OPTIONS);
+  res.json({ message: "Logged out" });
+});
+
+// checks login status without needing token in headers
+router.get("/me", (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json(decoded);
+  } catch {
+    res.status(403).json({ message: "Invalid or expired token" });
+  }
 });
 
 module.exports = router;
