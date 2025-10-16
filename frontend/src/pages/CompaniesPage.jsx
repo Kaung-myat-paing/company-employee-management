@@ -45,9 +45,9 @@ export default function CompaniesPage() {
   return (
     <div className="m-4 p-4">
       <div className="flex pb-3">
-        <h2 className="title">Companies</h2>
+        
         <Link to="/companies/new">
-        <button className="btn-secondary ml-3">Create New Company</button>
+        <button className="btn btn-outline-secondary">Create New Company</button>
       </Link>
       </div>
       <Table>
@@ -64,13 +64,13 @@ export default function CompaniesPage() {
               <td className="px-4 py-2">{c.website}</td>
               <td className="px-4 py-2 text-left space-x-2">
                 <Link to={`/companies/${c.id}`}>
-                  <button className="btn-secondary text-green-700 border-green-700 hover:bg-green-800 hover:text-white">
+                  <button className="btn btn-outline-primary">
                     Edit
                   </button>
                 </Link>
                 <button
                   onClick={() => handleDelete(c.id)}
-                  className="btn-secondary text-red-700 border-red-700 hover:bg-red-800 hover:text-white"
+                  className="btn btn-outline-secondary"
                 >
                   Delete
                 </button>

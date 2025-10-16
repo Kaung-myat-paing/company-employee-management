@@ -31,18 +31,16 @@ export default function CompanyForm() {
 
   return (
     <div className="max-w-md mx-auto p-4 items-center">
-      
-
       <form onSubmit={handleSubmit} className="w-96">
-        <h2 className="title">{id ? "Edit Company" : "Create Company"}</h2>
+        <h2 className="heading-primary">{id ? "Edit Company" : "Create Company"}</h2>
         <div className="grid gap-4">
           <div>
-            <label className="label">Name:</label>
+            <label className="form-label">Name:</label>
             <input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
-              className="text-field"
+              className="form-input"
             />
           </div>
           <div>
@@ -50,7 +48,7 @@ export default function CompanyForm() {
             <input
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="text-field"
+              className="form-input"
             />
           </div>
           <div>
@@ -58,7 +56,7 @@ export default function CompanyForm() {
             <input
               value={form.address}
               onChange={(e) => setForm({ ...form, address: e.target.value })}
-              className="text-field"
+              className="form-input"
             />
           </div>
           <div>
@@ -66,49 +64,18 @@ export default function CompanyForm() {
             <input
               value={form.website}
               onChange={(e) => setForm({ ...form, website: e.target.value })}
-              className="text-field"
+              className="form-input"
             />
           </div>
-          <button className="btn-primary" type="submit">{id ? "Update" : "Create"}</button>
+           <div className="flex gap-3 mt-3">
+            <button className="btn btn-secondary" onClick={() => navigate(-1)}>
+              Back
+            </button>
+            <button className="btn btn-secondary" type="submit">{id ? "Update" : "Create"}</button>
+          </div>
+          
         </div>
       </form>
-
-      {/* <form onSubmit={handleSubmit}>
-        <div grid gap-6 mb-6 md:grid-cols-2>
-          <div>
-            <label className="label">Name:</label>
-            <input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required
-              className="text-field"
-            />
-          </div>
-          <div>
-            <label className="label">Email:</label>
-            <input
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="text-field"
-            />
-          </div>
-          <div>
-            <label>Address:</label>
-            <input
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-            />
-          </div>
-          <div>
-            <label>Website:</label>
-            <input
-              value={form.website}
-              onChange={(e) => setForm({ ...form, website: e.target.value })}
-            />
-          </div>
-          <button type="submit">{id ? "Update" : "Create"}</button>
-        </div>
-      </form> */}
     </div>
   );
 }

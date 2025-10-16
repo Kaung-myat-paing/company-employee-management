@@ -1,25 +1,66 @@
 @import "tailwindcss";
 
-
-@layer base {
-  body {
-    @apply bg-gray-50 text-gray-800 font-sans;
-  }
-
-  .text-field {
-    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
-  }
-  .label {
-    @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
-  }
-  .btn-primary {
-    @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 my-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
-  }
-  .btn-secondary {
-    @apply text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800;
-  }
-  .title {
-    @apply text-2xl font-bold mb-6 text-center text-indigo-600;
-  }
-  
+:root {
+  --color-primary: #05F2DB;
+  --color-secondary: #05A696;
+  --color-on-primary: #003b37;
+  --color-on-secondary: #002a27;
 }
+
+.menu-item-active { @apply font-semibold; color: var(--color-secondary); }
+.link-hover { transition: color 120ms ease; }
+.link-hover:hover { color: var(--color-primary); }
+
+
+.btn { @apply inline-flex items-center justify-center px-3 py-1.5 rounded border font-medium transition-colors; }
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.btn-primary:hover { filter: brightness(0.95); }
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: white;
+}
+.btn-secondary:hover { filter: brightness(0.95); }
+
+.btn-outline-primary { @apply bg-transparent; border-color: var(--color-primary); color: var(--color-primary); }
+.btn-outline-primary:hover { background-color: color-mix(in oklab, var(--color-primary) 12%, transparent); }
+
+.btn-outline-secondary { @apply bg-transparent; border-color: var(--color-secondary); color: var(--color-secondary); }
+.btn-outline-secondary:hover { background-color: color-mix(in oklab, var(--color-secondary) 12%, transparent); }
+
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem; 
+  margin-bottom: 0.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem; 
+  border-radius: 0.375rem; 
+  border: 1px solid #e5e7eb;
+  background: white;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 35%, transparent);
+}
+
+.heading-primary {
+  font-size: 1.5rem; 
+  font-weight: 700; 
+  margin-bottom: 1.5rem 0; 
+  text-align: center;
+  color: var(--color-secondary);
+}
+  

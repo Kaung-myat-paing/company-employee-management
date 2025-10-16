@@ -57,7 +57,7 @@ export default function TablePagination({ currentPage, total, limit, onPageChang
               key={it}
               onClick={() => goTo(it)}
               className={`px-3 py-1 border rounded ${
-                it === page ? "bg-blue-600 text-white border-blue-600" : "hover:bg-gray-50"
+                it === page ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-[var(--color-primary)]" : "hover:bg-gray-50"
               }`}
               aria-current={it === page ? "page" : undefined}
             >

@@ -31,31 +31,31 @@ export default function RegisterPage() {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       
       <form onSubmit={handleSubmit} className="bg-white p-8 shadow-lg rounded-lg w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">Sign Up</h2>
+        <h2 className="heading-primary">Sign Up</h2>
          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <div className="mb-3">
-          <label className="block text-sm font-semibold mb-1">Username:</label>
+          <label className="form-label">Username:</label>
           <input
             type="text"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="form-input"
           />
         </div>
         <div className="mb-6">
-          <label className="block text-sm font-semibold mb-1">Password:</label>
+          <label className="form-label">Password:</label>
           <input
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="form-input"
           />
         </div>
        
         {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
-        <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">Sign Up</button>
+        <button type="submit" className="btn btn-secondary w-full">Sign Up</button>
       </form>
     </div>
   );

@@ -1,6 +1,6 @@
 export default function TableHeader({ columns }) {
   return (
-    <thead className="bg-indigo-50 text-indigo-700">
+    <thead className="bg-indigo-50 text-[var(--color-on-primary)]">
       <tr>
         {columns.map((col, idx) => (
           <th
