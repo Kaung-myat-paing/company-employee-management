@@ -9,12 +9,22 @@ router.get("/", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = Math.min(parseInt(req.query.limit) || 10, 100);
   const offset = (page - 1) * limit;
+  const { companyId } = req.query;
+
+  // Build WHERE clause
+  const where = {};
+
+  if (companyId) {
+    // if companyId sent as string, convert to int
+    where.companyId = parseInt(companyId, 10);
+  }
 
   const { count, rows } = await Employee.findAndCountAll({
+    where,
+    include: [{ model: Company, attributes: ["id", "name"] }],
     limit,
     offset,
     order: [["id", "ASC"]],
-    include: [{ model: Company, attributes: ["id", "name"] }],
   });
 
   res.json({ total: count, page, perPage: limit, data: rows });
