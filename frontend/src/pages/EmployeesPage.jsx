@@ -1,11 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../api";
+import { useAuth } from "../context/AuthContext";
+
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const limit = 5;
+
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const loadEmployees = useCallback(async () => {
     API.get(`/employees?page=${page}&limit=${limit}`).then((res) => {
@@ -19,6 +24,12 @@ export default function EmployeesPage() {
   }, [loadEmployees]);
 
   const handleDelete = async (id) => {
+    if (!isAuthenticated) {
+      alert("You must be logged in to delete an employee.");
+      navigate("/login", { state: { from: { pathname: "/employees" } } });
+      return;
+    }
+
     if (window.confirm("Are you sure you want to delete this employee?")) {
       await API.delete(`/employees/${id}`);
       loadEmployees();

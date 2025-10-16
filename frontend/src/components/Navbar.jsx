@@ -1,12 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
-import API from "../api";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const navigate = useNavigate();
-  const logout = async () => {
-    await API.post("/auth/logout");
-    navigate("/login");
-  };
+  const { user, logout, isAuthenticated } = useAuth();
   return (
     <nav
       style={{
@@ -27,16 +23,27 @@ export default function Navbar() {
         <Link to="/employees" style={{ color: "#fff", marginRight: 10 }}>
           Employees
         </Link>
-        <Link to="/login" style={{ color: "#fff" }}>
-          Login
-        </Link>
-        <Link to="/signup" style={{ color: "#fff", marginLeft: 10 }}>
-          Register
-        </Link>
+        {isAuthenticated ? (
+          <>
+            <span style={{ marginRight: "10px" }}>{user.username}</span>
+            <button
+              onClick={logout}
+              style={{ background: "#555", color: "#fff" }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" style={{ color: "#fff", marginRight: 10 }}>
+              Login
+            </Link>
+            <Link to="/signup" style={{ color: "#fff" }}>
+              Register
+            </Link>
+          </>
+        )}
       </div>
-      <button onClick={logout} style={{ background: "#555", color: "#fff" }}>
-        Logout
-      </button>
     </nav>
   );
 }

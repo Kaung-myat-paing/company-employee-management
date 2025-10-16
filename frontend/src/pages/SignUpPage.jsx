@@ -1,8 +1,9 @@
 import { useState } from "react";
-import API from "../api";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
+  const { signup } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,11 +15,15 @@ export default function RegisterPage() {
     setError("");
     setSuccess("");
     try {
-      await API.post("/auth/register", { username, password });
-      setSuccess("Registration successful! Redirecting...");
-      setTimeout(() => navigate("/companies"), 1500);
+      await signup({ username, password });
+      navigate("/companies");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      const serverMsg =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.response?.data?.errors?.[0]?.message;
+      setError(serverMsg || `Registration failed: ${err.message}`);
+      console.error("Signup error:", err);
     }
   };
 

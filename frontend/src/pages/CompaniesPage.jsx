@@ -1,11 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import API from "../api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const limit = 5;
+
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const loadCompanies = useCallback(async () => {
     try {
@@ -22,6 +27,11 @@ export default function CompaniesPage() {
   }, [loadCompanies]);
 
   const handleDelete = async (id) => {
+    if (!isAuthenticated) {
+      alert("You must be logged in to delete a company.");
+      navigate("/login", { state: { from: { pathname: "/companies" } } });
+      return;
+    }
     if (window.confirm("Are you sure you want to delete this company?")) {
       await API.delete(`/companies/${id}`);
       loadCompanies();
