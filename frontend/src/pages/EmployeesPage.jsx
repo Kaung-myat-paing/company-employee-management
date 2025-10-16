@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import API from "../api";
 import { useAuth } from "../context/AuthContext";
 import Table from "../components/Table/Table";
@@ -12,12 +12,31 @@ export default function EmployeesPage() {
   const [companies, setCompanies] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [companyFilter, setCompanyFilter] = useState("");
   const limit = 10;
+
+  // sync companyId with URL query param
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialCompanyId = searchParams.get("companyId") || "";
+  const [companyFilter, setCompanyFilter] = useState(initialCompanyId);
+
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
-  // Load employees and companies on mount
+  // Keep local state in sync if the URL changes
+  useEffect(() => {
+    const id = searchParams.get("companyId") || "";
+    setCompanyFilter(id);
+  }, [searchParams]);
+
+  // When the filter changes, reset to page 1 and update the URL
+  useEffect(() => {
+    setPage(1);
+    const next = new URLSearchParams(searchParams);
+    if (companyFilter) next.set("companyId", companyFilter);
+    else next.delete("companyId");
+    setSearchParams(next, { replace: true });
+  }, [companyFilter]);
+
   useEffect(() => {
     fetchCompanies();
   }, []);
@@ -29,20 +48,13 @@ export default function EmployeesPage() {
   const fetchCompanies = async () => {
     try {
       const res = await API.get("/companies");
-      const list = res.data?.data ?? res.data; // supports both { data: [] } and []
+      const list = res.data?.data ?? res.data;
       setCompanies(Array.isArray(list) ? list : []);
     } catch (err) {
       console.error("Failed to load companies:", err);
       setCompanies([]);
     }
   };
-
-  // const fetchEmployees = useCallback(async () => {
-  //   API.get(`/employees?page=${page}&limit=${limit}`).then((res) => {
-  //     setEmployees(res.data.data || []);
-  //     setTotal(res.data.total ?? 0);
-  //   });
-  // }, [page, limit]);
 
   const fetchEmployees = async () => {
     const res = await API.get("/employees", {
@@ -109,7 +121,7 @@ export default function EmployeesPage() {
         >
           <option value="">All Companies</option>
           {(companies || []).map((c) => (
-            <option key={c.id} value={c.id}>
+            <option key={c.id} value={String(c.id)}>
               {c.name}
             </option>
           ))}

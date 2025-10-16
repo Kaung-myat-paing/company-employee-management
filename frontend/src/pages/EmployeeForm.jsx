@@ -103,7 +103,7 @@ export default function EmployeeForm() {
         </div>
 
         <div className="flex gap-3">
-          <button className="btn btn-secondary" onClick={()=> navigate(-1)}>Back</button>
+          <button type="button" className="btn btn-secondary" onClick={()=> navigate(-1)}>Back</button>
           <button type="submit" className="btn btn-secondary">{id ? "Update" : "Create"}</button>
         </div>
         </div>

@@ -37,8 +37,9 @@ export default function CompaniesPage() {
       return;
     }
 
-    if (!window.confirm("Are you sure you want to delete this company?")) return;
-   
+    if (!window.confirm("Are you sure you want to delete this company?"))
+      return;
+
     try {
       await API.delete(`/companies/${id}`);
 
@@ -64,10 +65,11 @@ export default function CompaniesPage() {
   return (
     <div className="m-4 p-4">
       <div className="flex pb-3">
-        
         <Link to="/companies/new">
-        <button className="btn btn-outline-secondary">Create New Company</button>
-      </Link>
+          <button className="btn btn-outline-secondary">
+            Create New Company
+          </button>
+        </Link>
       </div>
       <Table>
         <TableHeader
@@ -82,10 +84,9 @@ export default function CompaniesPage() {
               <td className="px-4 py-2">{c.address}</td>
               <td className="px-4 py-2">{c.website}</td>
               <td className="px-4 py-2 text-left space-x-2">
+                
                 <Link to={`/companies/${c.id}`}>
-                  <button className="btn btn-outline-primary">
-                    Edit
-                  </button>
+                  <button className="btn btn-outline-primary">Edit</button>
                 </Link>
                 <button
                   onClick={() => handleDelete(c.id)}
@@ -93,6 +94,9 @@ export default function CompaniesPage() {
                 >
                   Delete
                 </button>
+                <Link to={`/employees?companyId=${c.id}`}>
+                  <button className="btn btn-primary">View Employees</button>
+                </Link>
               </td>
             </TableRow>
           ))}
@@ -105,54 +109,7 @@ export default function CompaniesPage() {
         limit={limit}
         onPageChange={setPage}
       />
-      {/* <table className="min-w-full border border-gray-200 bg-white shadow-sm rounded-lg">
-        <thead className="bg-indigo-50 text-indigo-700">
-          <tr>
-            <th className="px-4 py-2 border">ID</th>
-            <th className="px-4 py-2 border">Name</th>
-            <th className="px-4 py-2 border">Email</th>
-            <th className="px-4 py-2 border">Address</th>
-            <th className="px-4 py-2 border">Website</th>
-            <th className="px-4 py-2 border">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {companies.map((company) => (
-            <tr key={company.id} className="hover:bg-indigo-50 transition">
-              <td className="px-4 py-2 border">{company.id}</td>
-              <td className="px-4 py-2 border">{company.name}</td>
-              <td className="px-4 py-2 border">{company.email}</td>
-              <td className="px-4 py-2 border">{company.address}</td>
-              <td className="px-4 py-2 border">{company.website}</td>
-              <td className="px-4 py-2 border text-center">
-                <Link to={`/companies/${company.id}`}>
-                  <button className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2">Edit</button>
-                </Link>
-                <button onClick={() => handleDelete(company.id)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
-      {/* <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
-        <button
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        <span>
-          Page {page} of {Math.ceil(total / limit) || 1}
-        </span>
-        <button
-          onClick={() =>
-            setPage((p) => (p < Math.ceil(total / limit) ? p + 1 : p))
-          }
-          disabled={page >= Math.ceil(total / limit)}
-        >
-          Next
-        </button>
-      </div> */}
+
     </div>
   );
 }
