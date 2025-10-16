@@ -28,30 +28,34 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "50px auto" }}>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      
+      <form onSubmit={handleSubmit} className="bg-white p-8 shadow-lg rounded-lg w-96">
+        <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">Sign Up</h2>
+         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        <div className="mb-3">
+          <label className="block text-sm font-semibold mb-1">Username:</label>
           <input
             type="text"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div className="mb-6">
+          <label className="block text-sm font-semibold mb-1">Password:</label>
           <input
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
         </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {success && <p style={{ color: "green" }}>{success}</p>}
-        <button type="submit">Register</button>
+       
+        {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
+        <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">Sign Up</button>
       </form>
     </div>
   );

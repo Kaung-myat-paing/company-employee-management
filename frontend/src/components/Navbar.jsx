@@ -4,45 +4,44 @@ import { useAuth } from "../context/AuthContext";
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
   return (
-    <nav
-      style={{
-        background: "#333",
-        color: "#fff",
-        padding: "10px 20px",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <div>
-        <Link to="/" style={{ color: "#fff", marginRight: 10 }}>
-          Home
-        </Link>
-        <Link to="/companies" style={{ color: "#fff", marginRight: 10 }}>
-          Companies
-        </Link>
-        <Link to="/employees" style={{ color: "#fff", marginRight: 10 }}>
-          Employees
-        </Link>
-        {isAuthenticated ? (
+    <nav className="bg-indigo-600 text-white shadow-md">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-3">
+        <div className="flex space-x-4">
+          <Link to="/" className="font-semibold hover:text-indigo-200">
+            Home
+          </Link>
+          <Link to="/companies" className="hover:text-indigo-200">
+            Companies
+          </Link>
+          <Link to="/employees" className="hover:text-indigo-200">
+            Employees
+          </Link>
+        </div>
+
+        <div className="font-semibold hover:text-indigo-200">
+            {isAuthenticated ? (
           <>
-            <span style={{ marginRight: "10px" }}>{user.username}</span>
+            <span className="text-sm">{user.username}</span>
             <button
               onClick={logout}
-              style={{ background: "#555", color: "#fff" }}
+              className="bg-indigo-800 ml-3 px-3 py-1 rounded hover:bg-indigo-700 transition"
             >
-              Logout
+              Sign Out
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" style={{ color: "#fff", marginRight: 10 }}>
-              Login
+            <Link to="/login" className="hover:text-indigo-200 mr-4">
+              Sign In
             </Link>
-            <Link to="/signup" style={{ color: "#fff" }}>
-              Register
+            <Link to="/signup" className="hover:text-indigo-200">
+              Sign up
             </Link>
           </>
         )}
+        </div>
+
+      
       </div>
     </nav>
   );

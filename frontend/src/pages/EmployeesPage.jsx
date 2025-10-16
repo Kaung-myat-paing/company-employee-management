@@ -2,6 +2,10 @@ import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api";
 import { useAuth } from "../context/AuthContext";
+import Table from "../components/Table/Table";
+import TableRow from "../components/Table/TableRow";
+import TablePagination from "../components/Table/TablePagination";
+import TableHeader from "../components/Table/TableHeader";
 
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
@@ -37,12 +41,59 @@ export default function EmployeesPage() {
   };
 
   return (
-    <div>
-      <h2>Employees</h2>
-      <Link to="/employees/new">
-        <button>Create New Employee</button>
-      </Link>
-      <table border="1" cellPadding="8" style={{ marginTop: "10px" }}>
+    <div className="m-4 p-4">
+      <div className="flex pb-3">
+        <h2 className="title">Employees</h2>
+        <Link to="/employees/new">
+          <button className="btn-secondary ml-3">Create New Employee</button>
+        </Link>
+      </div>
+      <Table>
+        <TableHeader
+          columns={[
+            "ID",
+            "First Name",
+            "Last Name",
+            "Company",
+            "Email",
+            "Phone",
+            "Actions",
+          ]}
+        />
+        <tbody>
+          {employees.map((e) => (
+            <TableRow key={e.id}>
+              <td className="px-4 py-2">{e.id}</td>
+              <td className="px-4 py-2">{e.firstName}</td>
+              <td className="px-4 py-2">{e.lastName}</td>
+              <td className="px-4 py-2">{e.Company?.name}</td>
+              <td className="px-4 py-2">{e.email}</td>
+              <td className="px-4 py-2">{e.phone}</td>
+              <td className="px-4 py-2 text-left space-x-2">
+                <Link to={`/employees/${e.id}`}>
+                  <button className="btn-secondary text-green-700 border-green-700 hover:bg-green-800 hover:text-white">
+                    Edit
+                  </button>
+                </Link>
+                <button
+                  onClick={() => handleDelete(e.id)}
+                  className="btn-secondary text-red-700 border-red-700 hover:bg-red-800 hover:text-white"
+                >
+                  Delete
+                </button>
+              </td>
+            </TableRow>
+          ))}
+        </tbody>
+      </Table>
+      <TablePagination
+        currentPage={page}
+        total={total}
+        limit={limit}
+        onPageChange={setPage}
+      />
+
+      {/* <table border="1" cellPadding="8" style={{ marginTop: "10px" }}>
         <thead>
           <tr>
             <th>ID</th>
@@ -93,7 +144,7 @@ export default function EmployeesPage() {
         >
           Next
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -43,45 +43,55 @@ export default function EmployeeForm() {
   };
 
   return (
-    <div>
-      <h2>{id ? "Edit Employee" : "Create Employee"}</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>First Name:</label>
+    <div className="max-w-md mx-auto p-4">
+      <form onSubmit={handleSubmit} className="w-96">
+        <h2 className="title">{id ? "Edit Employee" : "Create Employee"}</h2>
+        <div className="grid gap-4">
+           <div>
+          <label className="label">First Name:</label>
           <input
             required
             value={form.firstName}
             onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+            className="text-field"
           />
         </div>
         <div>
-          <label>Last Name:</label>
+          <label className="label">Last Name:</label>
           <input
             required
             value={form.lastName}
             onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+            className="text-field"
           />
         </div>
         <div>
-          <label>Email:</label>
+          <label className="label">Email:</label>
           <input
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
+            className="text-field"
           />
         </div>
         <div>
-          <label>Phone:</label>
+          <label className="label">Phone:</label>
           <input
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            className="text-field"
           />
         </div>
         <div>
-          <label>Company:</label>
+          <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Company
+          </label>
           <select
             required
             value={form.companyId}
             onChange={(e) => setForm({ ...form, companyId: e.target.value })}
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option value="">Select a company</option>
             {companies.map((c) => (
@@ -91,7 +101,9 @@ export default function EmployeeForm() {
             ))}
           </select>
         </div>
-        <button type="submit">{id ? "Update" : "Create"}</button>
+
+        <button type="submit" className="btn-primary">{id ? "Update" : "Create"}</button>
+        </div>
       </form>
     </div>
   );
