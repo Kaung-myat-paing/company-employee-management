@@ -1,6 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import API from "../api";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const logout = async () => {
+    await API.post("/auth/logout");
+    navigate("/login");
+  };
   return (
     <nav
       style={{
@@ -18,10 +24,19 @@ export default function Navbar() {
         <Link to="/companies" style={{ color: "#fff", marginRight: 10 }}>
           Companies
         </Link>
-        <Link to="/employees" style={{ color: "#fff" }}>
+        <Link to="/employees" style={{ color: "#fff", marginRight: 10 }}>
           Employees
         </Link>
+        <Link to="/login" style={{ color: "#fff" }}>
+          Login
+        </Link>
+        <Link to="/signup" style={{ color: "#fff", marginLeft: 10 }}>
+          Register
+        </Link>
       </div>
+      <button onClick={logout} style={{ background: "#555", color: "#fff" }}>
+        Logout
+      </button>
     </nav>
   );
 }
