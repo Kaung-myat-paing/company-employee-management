@@ -11,15 +11,15 @@ export default function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const limit = 5;
+  const limit = 10;
 
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
   const loadEmployees = useCallback(async () => {
     API.get(`/employees?page=${page}&limit=${limit}`).then((res) => {
-      setEmployees(res.data.data);
-      setTotal(res.data.total);
+      setEmployees(res.data.data || []);
+      setTotal(res.data.total ?? 0);
     });
   }, [page, limit]);
 
@@ -34,18 +34,37 @@ export default function EmployeesPage() {
       return;
     }
 
-    if (window.confirm("Are you sure you want to delete this employee?")) {
+    if (!window.confirm("Are you sure you want to delete this employee?")) return;
+
+    try {
       await API.delete(`/employees/${id}`);
-      loadEmployees();
+
+      const totalAfter = Math.max(0, total - 1);
+      const lastPageAfter = Math.max(1, Math.ceil(totalAfter / limit));
+
+      if (page > lastPageAfter) {
+        // Delete the last item on the last page: go back one page
+        setPage(lastPageAfter);
+      } else {
+        // Stay on the same page and refetch
+        await loadEmployees();
+      }
+    } catch (err) {
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        navigate("/login", { state: { from: { pathname: "/employees" } } });
+      } else {
+        console.error("Failed to delete employee:", err);
+      }
     }
   };
 
   return (
     <div className="m-4 p-4">
       <div className="flex pb-3">
-        
         <Link to="/employees/new">
-          <button className="btn btn-outline-secondary">Create New Employee</button>
+          <button className="btn btn-outline-secondary">
+            Create New Employee
+          </button>
         </Link>
       </div>
       <Table>
@@ -71,9 +90,7 @@ export default function EmployeesPage() {
               <td className="px-4 py-2">{e.phone}</td>
               <td className="px-4 py-2 text-left space-x-2">
                 <Link to={`/employees/${e.id}`}>
-                  <button className="btn btn-outline-primary">
-                    Edit
-                  </button>
+                  <button className="btn btn-outline-primary">Edit</button>
                 </Link>
                 <button
                   onClick={() => handleDelete(e.id)}
@@ -92,7 +109,6 @@ export default function EmployeesPage() {
         limit={limit}
         onPageChange={setPage}
       />
-
     </div>
   );
 }

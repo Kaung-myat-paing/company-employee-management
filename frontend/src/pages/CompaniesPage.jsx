@@ -11,7 +11,7 @@ export default function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const limit = 5;
+  const limit = 10;
 
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -19,8 +19,8 @@ export default function CompaniesPage() {
   const loadCompanies = useCallback(async () => {
     try {
       const res = await API.get(`/companies?page=${page}&limit=${limit}`);
-      setCompanies(res.data.data);
-      setTotal(res.data.total);
+      setCompanies(res.data.data || []);
+      setTotal(res.data.total ?? 0);
     } catch (err) {
       console.error("Failed to load companies:", err);
     }
@@ -36,9 +36,28 @@ export default function CompaniesPage() {
       navigate("/login", { state: { from: { pathname: "/companies" } } });
       return;
     }
-    if (window.confirm("Are you sure you want to delete this company?")) {
+
+    if (!window.confirm("Are you sure you want to delete this company?")) return;
+   
+    try {
       await API.delete(`/companies/${id}`);
-      loadCompanies();
+
+      const totalAfter = Math.max(0, total - 1);
+      const lastPageAfter = Math.max(1, Math.ceil(totalAfter / limit));
+
+      if (page > lastPageAfter) {
+        // Delete the last item on the last page: go back one page
+        setPage(lastPageAfter);
+      } else {
+        // Stay on the same page and refetch
+        await loadCompanies();
+      }
+    } catch (err) {
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        navigate("/login", { state: { from: { pathname: "/companies" } } });
+      } else {
+        console.error("Failed to delete company", err);
+      }
     }
   };
 
